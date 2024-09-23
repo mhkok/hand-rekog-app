@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hand-rekog-backend
+  namespace: hand-rekog
+spec:
+  nodeSelector:
+    tpu: "true"
+  containers:
+  - name: backend
+    image: docker.io/mhkok/pi-k8s:hrekog-backend1.4
+    ports:
+    - containerPort: 8000
+    env:
+      - name: API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: api-key-secret
+            key: API_KEY
+    command: [ "/bin/bash", "-c", "--" ]
+    args: [ "while true; do sleep 30; done;" ]
+    securityContext:
+      privileged: true
+    volumeMounts:
+      - mountPath: /dev/bus/usb
+        name: usb
+  volumes:
+    - name: usb
+      hostPath:
+        path: /dev/bus/usb
+        type: Directory
+  imagePullSecrets:
+  - name: regcred

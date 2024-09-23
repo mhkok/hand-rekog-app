@@ -1,0 +1,21 @@
+FROM debian
+  
+WORKDIR /home
+ENV HOME /home
+VOLUME /data
+EXPOSE 8888
+RUN cd ~
+RUN apt-get update
+RUN apt-get install -y git python3-pip python3-dev pkg-config wget usbutils curl
+
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN apt-get update
+RUN apt-get install -y --allow-unauthenticated libedgetpu1-std 
+
+RUN pip3 install --extra-index-url https://google-coral.github.io/py-repo/ pycoral~=2.0
+
+RUN mkdir coral && cd coral
+RUN git clone https://github.com/google-coral/tflite.git --depth 1
+
+RUN cd tflite/python/examples/classification && ./install_requirements.sh
