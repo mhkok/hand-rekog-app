@@ -15,8 +15,6 @@ EDGETPU_SHARED_LIB = {
   'Windows': 'edgetpu.dll'
 }[platform.system()]
 
-#app = FastAPI()
-
 class UserRequest(BaseModel):
     image: str
 
@@ -148,20 +146,3 @@ def get_inference_engine():
         return inference_engine, model_name
     else:
         raise NotImplementedError("Unsupported platform")
-
-# @app.post('/inference', response_model=InferenceResponse)
-# async def backend(request: UserRequest):
-#     try:
-#         inference_engine, model_name = get_inference_engine()
-
-#         model_path = TensorFlowInference.get_artifacts("hand-rekog", model_name , api_key=os.getenv('API_KEY')) 
-#         inference_engine.load_model(model_path)
-        
-#         # Perform inference
-#         predictions = inference_engine.predict(request.image)
-#         print(f"Predictions: {predictions}")
-
-#         return {"output_bbox": predictions}
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-    
